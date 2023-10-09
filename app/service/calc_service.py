@@ -2,7 +2,9 @@ class CalcService:
   def calculate(self, data):
 
     # データ初期化
-    annualWeeks  = 52
+    monthlyWeeks = 4.35
+    annualMonths = 12
+    annualWeeks  = monthlyWeeks * annualMonths
     workDays     = data.get('workDays')
     workHours    = data.get('workHours')
     toolTerm     = data.get('toolTerm')
@@ -14,7 +16,8 @@ class CalcService:
     productivity = data.get('productivity') / 100
 
     # 計算ロジック
-    annualWorkDays    = annualWeeks * workDays
+    monthlyWorkDays   = monthlyWeeks * workDays
+    annualWorkDays    = annualMonths * monthlyWorkDays
     hourlyWage        = income / annualWorkDays / workHours
     dailySavedMinutes = toolHours * productivity * 60
     dailyProfit       = hourlyWage * dailySavedMinutes / 60
@@ -26,6 +29,10 @@ class CalcService:
 
     # リターン
     result = {
+      "toolTerm"          : int(toolTerm),
+      "workHours"         : int(workHours),
+      "monthlyWorkDays"   : int(monthlyWorkDays),
+      "annualWorkDays"    : int(annualWorkDays),
       "hourlyWage"        : int(hourlyWage),
       "dailySavedMinutes" : int(dailySavedMinutes),
       "dailyProfit"       : int(dailyProfit),
