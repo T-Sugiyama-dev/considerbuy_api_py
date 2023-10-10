@@ -6,9 +6,8 @@ from app.service.calc_service import CalcService
 
 calc_controller = Blueprint('calc_controller', __name__)
 load_dotenv()
-client_origin = os.getenv("CLIENT_ORIGIN")
-CORS(calc_controller)
-calc_service = CalcService()
+client_origins = [os.getenv("CLIENT_ORIGIN_1"), os.getenv("CLIENT_ORIGIN_2")]
+CORS(calc_controller, origins=client_origins)
 
 @calc_controller.route("/calcValue", methods=["POST", "OPTIONS"])
 def api_create_order():
@@ -24,15 +23,13 @@ def api_create_order():
 
 def _build_cors_preflight_response():
     response = make_response()
-    response.headers.add("Access-Control-Allow-Origin", client_origin)
     response.headers.add('Access-Control-Allow-Headers', "Content-Type")
     response.headers.add('Access-Control-Allow-Credentials', 'true')
     response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
     return response
 
 def _corsify_actual_response(response):
-    response.headers.add("Access-Control-Allow-Origin", client_origin)
     response.headers.add('Access-Control-Allow-Headers', "Content-Type")
-    response.headers['Content-Type'] = 'application/json'
+    response.headers.add('Content-Type', 'application/json')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
